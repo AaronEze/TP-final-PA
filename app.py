@@ -91,5 +91,84 @@ def listar_busquedas():
     return jsonify(busquedas_json), 200
 
 
+# ==========================================
+# 📊 SECCIÓN: EVALUACIONES
+# ==========================================
+
+# 5. Evaluar un Candidato (POST)
+@app.route('/api/evaluaciones', methods=['POST'])
+def evaluar_candidato():
+    data = request.get_json()
+    
+    # Validamos datos mínimos requeridos
+    if not data or 'candidato_id' not in data or 'busqueda_id' not in data or 'resultado' not in data:
+        return jsonify({"error": "Faltan datos obligatorios (candidato_id, busqueda_id y resultado)"}), 400
+        
+    evaluacion = sistema.evaluar_candidato(
+        candidato_id=int(data['candidato_id']),
+        busqueda_id=int(data['busqueda_id']),
+        evaluador=data.get('evaluador', 'Recruiter Anonymous'),
+        resultado=data['resultado'], # "aprobado" o "rechazado"
+        puntuacion=float(data.get('puntuacion', 0.0)),
+        comentarios=data.get('comentarios', '')
+    )
+    
+    if evaluacion:
+        return jsonify({
+            "mensaje": "Evaluación registrada con éxito",
+            "evaluacion": evaluacion.to_dict()
+        }), 201
+    else:
+        return jsonify({"error": "No se pudo registrar la evaluación. Verificá los IDs."}), 400
+
+
+
+# SECCION: CALENDARIO Y TURNOS
+
+
+# 6. Ver slots disponibles para una fecha (GET)
+# Ejemplo de uso: /api/calendario/disponibilidad?fecha=2026-06-15
+@app.route('/api/calendario/disponibilidad', methods=['GET'])
+def ver_disponibilidad():
+    # Capturamos la fecha que viene en la URL como parámetro
+    fecha_str = request.args.get('fecha')
+    
+    if not fecha_str:
+        return jsonify({"error": "Falta el parámetro 'fecha' en formato YYYY-MM-DD"}), 400
+        
+    slots_libres = sistema.obtener_slots_disponibles(fecha_str)
+    
+    return jsonify({
+        "fecha": fecha_str,
+        "slots_disponibles": slots_libres
+    }), 200
+
+
+# 7. Agendar un Turno de entrevista (POST)
+@app.route('/api/turnos', methods=['POST'])
+def agendar_turno():
+    data = request.get_json()
+    
+    required = ['evaluacion_id', 'fecha', 'hora', 'entrevistador']
+    if not data or not all(k in data for k in required):
+        return jsonify({"error": f"Faltan datos obligatorios. Requeridos: {required}"}), 400
+        
+    nuevo_turno = sistema.agendar_turno(
+        evaluacion_id=int(data['evaluacion_id']),
+        fecha=data['fecha'], # YYYY-MM-DD
+        hora=data['hora'],   # HH:MM
+        entrevistador=data['entrevistador'],
+        sala=data.get('sala', 'Virtual Room')
+    )
+    
+    if nuevo_turno:
+        return jsonify({
+            "mensaje": "Turno agendado con éxito",
+            "turno": nuevo_turno.to_dict()
+        }), 201
+    else:
+        return jsonify({"error": "No se pudo agendar el turno. Horario no disponible o evaluación inexistente."}), 400
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
