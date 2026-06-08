@@ -6,6 +6,12 @@ from src.db import db
 from src.routes.candidatos_routes import candidatos_bp
 from src.routes.busquedas_routes import busquedas_bp
 
+from src.models.busqueda import BusquedaModel
+from src.models.candidato import CandidatoModel
+from src.models.turno import TurnoModel
+from src.models.evaluacion import EvaluacionModel
+
+
 def create_app():
     app = Flask(__name__)
     
@@ -33,7 +39,7 @@ def create_app():
         
     return app
 
-# Creamos la instancia global para que Gunicorn pueda usarla, y también para correrla localmente con python app.py
+# Creamos la instancia global para que Gunicorn pueda usarla en Render y correr local localmente
 app = create_app()
 
 if __name__ == '__main__':
