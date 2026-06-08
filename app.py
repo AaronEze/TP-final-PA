@@ -33,6 +33,8 @@ def create_app():
         
     return app
 
+# Creamos la instancia global para que Gunicorn pueda usarla, y también para correrla localmente con python app.py
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
     app.run(debug=True, port=5000)
