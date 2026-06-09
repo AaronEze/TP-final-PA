@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero_overlay">
+
+        <div class="hero_info">
+
+            <h1>
+                Bienvenido a TalentFlow
+            </h1>
+
+            <p>
+                Conectamos empresas,
+                reclutadores y candidatos.
+            </p>
+
+            <div class="hero_botones">
+
+                <a
+                    href="/registro/empresa"
+                    class="btn_principal"
+                >
+                    Quiero contratar
+                </a>
+
+                <a
+                    href="/registro/candidato"
+                    class="btn_secundario"
+                >
+                    Quiero postularme
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ÚLTIMAS BÚSQUEDAS -->
+
+<section class="ultimas_busquedas">
+
+    <h2>
+        Últimas búsquedas laborales
+    </h2>
+
+    <div class="grid_busquedas">
+
+        {% if busquedas %}
+
+            {% for busqueda in busquedas %}
+
+            <div class="card_busqueda">
+
+                <h3>{{ busqueda.titulo }}</h3>
+
+                <p>
+                    {{ busqueda.descripcion }}
+                </p>
+
+                <p>
+                    <b>Experiencia mínima:</b>
+                    {{ busqueda.exp_min }} años
+                </p>
+
+                <p>
+                    <b>Salario:</b>
+                    ${{ busqueda.salario_min }}
+                    -
+                    ${{ busqueda.salario_max }}
+                </p>
+
+                <a href="/busquedas/{{ busqueda.id }}">
+                    Ver detalle
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="card_busqueda">
+
+                <h3>
+                    No hay búsquedas publicadas
+                </h3>
+
+                <p>
+                    Todavía no existen ofertas laborales disponibles.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <div class="ver_todas">
+
+        <a href="/busquedas" class="btn_principal">
+            Ver todas las búsquedas
+        </a>
+
+    </div>
+
+</section>
+
+<!-- SOBRE NOSOTROS -->
+
+<section class="sobre_nosotros">
+
+    <h2>
+        Sobre TalentFlow
+    </h2>
+
+    <p>
+
+        TalentFlow es un simulador de plataforma de gestión de
+        reclutamiento y entrevistas laborales.
+
+        Permite a empresas publicar búsquedas,
+        a candidatos postularse y a reclutadores
+        gestionar evaluaciones y entrevistas
+        desde una única aplicación.
+
+    </p>
+
+</section>
+
+<!-- CÓMO FUNCIONA -->
+
+<section class="como_funciona">
+
+    <h2>
+        ¿Cómo funciona TalentFlow?
+    </h2>
+
+    <div class="pasos">
+
+        <div class="paso">
+
+            <h3>
+                1. La empresa publica una búsqueda
+            </h3>
+
+            <p>
+                Define el puesto,
+                requisitos y condiciones laborales.
+            </p>
+
+        </div>
+
+        <div class="paso">
+
+            <h3>
+                2. Los candidatos se postulan
+            </h3>
+
+            <p>
+                Registran su perfil y aplican
+                a las ofertas disponibles.
+            </p>
+
+        </div>
+
+        <div class="paso">
+
+            <h3>
+                3. El reclutador evalúa
+            </h3>
+
+            <p>
+                Analiza perfiles,
+                revisa experiencia y habilidades.
+            </p>
+
+        </div>
+
+        <div class="paso">
+
+            <h3>
+                4. Se agenda la entrevista
+            </h3>
+
+            <p>
+                El sistema organiza
+                los encuentros laborales.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
